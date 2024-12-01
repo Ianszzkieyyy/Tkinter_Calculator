@@ -8,14 +8,13 @@ window.title("Calculator App")
 
 num1 = 0
 num2 = 0
-num1_str_var = tk.StringVar(value='0')
-num2_str_var = tk.StringVar()
+cal_str_var = tk.StringVar()
 
 
 screen = tk.Frame(window)
 output = tk.Label(
     master=screen,
-    textvariable=num1_str_var,
+    textvariable=cal_str_var,
     font=('Segoe UI', 36)
 )
 
@@ -23,7 +22,7 @@ screen.pack(expand=True, fill=tk.X)
 output.pack(side=tk.RIGHT, padx=(0, 20))
 
 
-btn_screen = tk.Frame(window)
+btn_screen = tk.Frame(window, bg='#333333')
 button_list = {
     "numbers": ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '.'],
     "operators": ['+', '-', '*', '/', '='],
@@ -34,9 +33,23 @@ number_btns_frame = tk.Frame(btn_screen)
 operators_btns_frame = tk.Frame(btn_screen)
 special_btns_frame = tk.Frame(btn_screen)
 
+def button_click(btn_name: str):
+    if btn_name == '=':
+        val = eval(cal_str_var.get())
+        cal_str_var.set(val)
+    elif btn_name == 'AC':
+        cal_str_var.set("")
+    elif btn_name == 'C':
+        cal_str_var.set(cal_str_var.get()[:-1])
+    else:
+        cal_str_var.set(cal_str_var.get() + btn_name)
+
+
+
 def create_buttons(btn_name: str, btn_root):
     return tk.Button(
         master = btn_root,
+        command= lambda: button_click(btn_name),
         text=btn_name,
         font=('Segoe UI', 12),
         fg='white',
@@ -44,9 +57,8 @@ def create_buttons(btn_name: str, btn_root):
         padx=5,
         pady=5,
         relief=tk.FLAT,
-        width=3,
+        width=8,
         height=3,
-        
     )
 
 
@@ -90,9 +102,9 @@ for key, value in button_list.items():
             create_buttons(btn, special_btns_frame).pack(side=tk.LEFT)
         
 
-btn_screen.pack(expand=True, fill=tk.X,)
-special_btns_frame.grid(row = 0, column= 0, sticky="nsew")
-number_btns_frame.grid(row = 1, column= 0, rowspan=4, sticky="nsew")
-operators_btns_frame.grid(row = 0, column = 1, rowspan=5, sticky="nsew")
+btn_screen.pack(expand=True, fill=tk.BOTH)
+special_btns_frame.grid(row = 0, column= 0)
+number_btns_frame.grid(row = 1, column= 0, rowspan=4,)
+operators_btns_frame.grid(row = 0, column = 1, rowspan=5,)
 
 window.mainloop()
